@@ -1,0 +1,25 @@
+pipeline {
+
+    agent any
+    tools {
+        maven 'maven' 
+    }
+    stages {
+        stage('Compile stage') {
+            steps {
+                sh "mvn clean install" 
+        }
+    }
+
+         stage('testing stage') {
+             steps {
+                sh "mvn test"
+        }
+    }
+		stage('build && SonarQube analysis') {
+		  steps{
+				withSonarQubeEnv('sonarqube"){
+			sh 'mvn clean package sonar:sonar'
+				}	
+			}
+		}	
